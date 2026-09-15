@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Forma — Plano a propuesta</title>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<style>
+:root{--bg:#f4f1eb;--paper:#fff;--ink:#181816;--muted:#6d675e;--line:#ddd7cd;--soft:#f8f5ef;--accent:#b59a76;--green:#dfe9dc}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,Helvetica,sans-serif}.top{height:74px;padding:0 5vw;display:flex;align-items:center;justify-content:space-between;background:#faf8f4;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}.brand{display:flex;align-items:center;gap:10px}.mark{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:var(--ink);color:#fff;font-family:Georgia,serif}.brand b{font-size:21px}.brand small{color:#777;border-left:1px solid #ccc;padding-left:10px}.wrap{max-width:1100px;margin:34px auto;padding:0 18px}.card{background:#fff;border:1px solid var(--line);border-radius:26px;padding:30px}.eyebrow{font-size:11px;letter-spacing:.16em;font-weight:700;color:#786f64}.title{font:500 clamp(36px,5vw,54px)/1.05 Georgia,serif;margin:8px 0 12px}.sub{color:#666;line-height:1.55;max-width:800px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field{display:flex;flex-direction:column;gap:7px;font-size:12px;font-weight:700}.field input,.field textarea{border:1px solid #d7d1c7;border-radius:12px;padding:14px;background:#fff}.field textarea{min-height:100px;resize:vertical}.upload{border:2px dashed #bbb2a5;border-radius:18px;padding:20px;background:#faf8f3}.upload input{display:block;width:100%;margin-top:10px}.preview{margin-top:10px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.preview img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:10px}.btn{border:0;border-radius:999px;padding:13px 19px;font:inherit;cursor:pointer}.primary{background:#181816;color:#fff}.ghost{background:#e9e4da}.actions{display:flex;justify-content:flex-end;gap:10px;margin-top:22px;flex-wrap:wrap}.notice{background:#f0eadf;border:1px solid #ddcfb8;border-radius:14px;padding:13px;font-size:12px;color:#655533;line-height:1.5}.progressBox{display:none;margin-top:22px;background:#fff;border:1px solid var(--line);border-radius:20px;padding:18px}.progressTrack{height:10px;border-radius:999px;background:#ece7df;overflow:hidden}.progressBar{height:100%;width:0;background:#181816;transition:width .35s}.status{margin-top:10px;color:#555}.result{display:none;margin-top:24px}.sectionTitle{font:500 30px Georgia,serif;margin:28px 0 12px}.options{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.option{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden}.option img{width:100%;aspect-ratio:4/3;object-fit:cover;background:#eee}.optionBody{padding:14px}.optionBody h3{font:500 24px Georgia,serif;margin:0 0 7px}.optionBody p{color:#5f5a52;font-size:13px;line-height:1.45}.tags{display:flex;flex-wrap:wrap;gap:6px}.tag{background:#f0ebe2;border-radius:999px;padding:6px 8px;font-size:10px}.materials{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px}.mat{background:#f7f4ee;border-radius:10px;padding:8px;font-size:10px}.mat b{display:block;margin-bottom:2px}.validation{margin-top:8px;font-size:10px;color:#65725e}.pdfActions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}.small{font-size:11px;color:#777}.heroNote{margin:12px 0 0;display:inline-flex;background:var(--green);border-radius:999px;padding:8px 11px;font-size:11px;color:#34452f}
+@media(max-width:820px){.grid2,.options{grid-template-columns:1fr}.preview{grid-template-columns:1fr 1fr}.brand small{display:none}.card{padding:22px}}
+</style>
+</head>
+<body>
+<header class="top"><div class="brand"><span class="mark">F</span><b>Forma</b><small>Plano → 3 distribuciones → 3 ambientes → PDF</small></div><button class="btn ghost" onclick="location.reload()">Nuevo proyecto</button></header>
+<main class="wrap">
+  <section class="card">
+    <span class="eyebrow">GENERADOR AUTOMÁTICO</span>
+    <h1 class="title">Sube el plano. Forma prepara la reunión.</h1>
+    <p class="sub">Forma analiza el plano medido, respeta puertas, ventanas y geometría fija, genera tres propuestas de distribución y tres ambientes fotorrealistas, y monta un PDF visual para que el cliente elija.</p>
+    <span class="heroNote">La geometría fija se valida automáticamente antes de presentar cada distribución.</span>
+
+    <div class="grid2" style="margin-top:22px">
+      <label class="field">Cliente<input id="client" placeholder="Ej. Familia Martínez"></label>
+      <label class="field">Presupuesto objetivo<input id="budget" placeholder="Ej. 25.000 €"></label>
+      <label class="field" style="grid-column:1/-1">Objetivos<textarea id="goals" placeholder="Ej. ganar almacenaje, mejorar circulación, crear zona social..."></textarea></label>
+      <label class="field" style="grid-column:1/-1">Qué debe mantenerse<textarea id="keep" placeholder="Ej. puerta, ventana, fregadero/desagüe, radiador..."></textarea></label>
+      <label class="field" style="grid-column:1/-1">Preferencias escritas (opcional)<textarea id="referenceText" placeholder="Ej. materiales naturales, no quiere negro, le gustan tonos cálidos..."></textarea></label>
+    </div>
+
+    <div class="grid2" style="margin-top:18px">
+      <div class="upload"><b>1. Plano medido</b><div class="small">PNG/JPG. Debe mostrar las cotas y huecos.</div><input id="plan" type="file" accept="image/*"><div id="planPreview" class="preview"></div></div>
+      <div class="upload"><b>2. Foto actual</b><div class="small">La perspectiva que usaremos para los renders.</div><input id="current" type="file" accept="image/*"><div id="currentPreview" class="preview"></div></div>
+    </div>
+    <div class="upload" style="margin-top:14px"><b>3. Referencias del cliente (opcional)</b><div class="small">Hasta 3 imágenes. Si no aporta referencias, Forma propondrá tres ambientes distintos.</div><input id="refs" type="file" accept="image/*" multiple><div id="refsPreview" class="preview"></div></div>
+
+    <div class="notice" style="margin-top:16px">Las propuestas son conceptuales y deben revisarse antes de ejecución. Forma intenta preservar exactamente la arquitectura fija del plano y valida automáticamente las variantes generadas.</div>
+    <div class="actions"><button id="generateBtn" class="btn primary">Generar dossier automático</button></div>
+
+    <div id="progressBox" class="progressBox"><div class="progressTrack"><div id="progressBar" class="progressBar"></div></div><div id="status" class="status">Preparando…</div></div>
+  </section>
+
+  <section id="result" class="result">
+    <h2 class="sectionTitle">3 distribuciones generadas</h2>
+    <div id="layoutGrid" class="options"></div>
+    <h2 class="sectionTitle">3 ambientes generados</h2>
+    <div id="styleGrid" class="options"></div>
+    <div class="pdfActions"><button id="pdfBtn" class="btn primary">Descargar PDF de elección</button></div>
+  </section>
+</main>
+<script>
+const state={plan:null,current:null,refs:[],result:null,jobId:null};
+const $=id=>document.getElementById(id);
+function escapeHtml(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+async function compressFile(file,max=1500,quality=.78){
+  const data=await new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(file)});
+  const img=await new Promise((res,rej)=>{const im=new Image();im.onload=()=>res(im);im.onerror=rej;im.src=data});
+  const scale=Math.min(1,max/Math.max(img.width,img.height));const w=Math.round(img.width*scale),h=Math.round(img.height*scale);
+  const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);
+  const out=c.toDataURL('image/jpeg',quality);return {mime:'image/jpeg',base64:out.split(',')[1],dataUrl:out};
+}
+function showPreview(container,items){container.innerHTML=items.map(x=>`<img src="${x.dataUrl}">`).join('')}
+$('plan').addEventListener('change',async e=>{if(e.target.files[0]){state.plan=await compressFile(e.target.files[0],1800,.84);showPreview($('planPreview'),[state.plan])}});
+$('current').addEventListener('change',async e=>{if(e.target.files[0]){state.current=await compressFile(e.target.files[0],1600,.8);showPreview($('currentPreview'),[state.current])}});
+$('refs').addEventListener('change',async e=>{state.refs=[];for(const f of [...e.target.files].slice(0,3))state.refs.push(await compressFile(f,1200,.72));showPreview($('refsPreview'),state.refs)});
+
+async function generate(){
+  if(!state.plan||!state.current){alert('Sube el plano medido y una foto actual.');return}
+  $('generateBtn').disabled=true;$('progressBox').style.display='block';$('result').style.display='none';
+  const id=crypto.randomUUID();state.jobId=id;
+  const payload={client:$('client').value,budget:$('budget').value,goals:$('goals').value,keep:$('keep').value,referenceText:$('referenceText').value,plan:{mime:state.plan.mime,base64:state.plan.base64},currentPhoto:{mime:state.current.mime,base64:state.current.base64},references:state.refs.map(r=>({mime:r.mime,base64:r.base64}))};
+  const resp=await fetch(`/.netlify/functions/generate-background?jobId=${encodeURIComponent(id)}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+  if(!resp.ok&&resp.status!==202){$('status').textContent='No se pudo iniciar la generación.';$('generateBtn').disabled=false;return}
+  poll();
+}
+async function poll(){
+  try{
+    const r=await fetch(`/api/status?jobId=${encodeURIComponent(state.jobId)}`,{cache:'no-store'});const s=await r.json();
+    $('progressBar').style.width=(s.progress||0)+'%';$('status').textContent=s.message||s.status;
+    if(s.status==='done'){state.result=s;renderResult();$('generateBtn').disabled=false;return}
+    if(s.status==='error'){throw new Error(s.message||'Error')}
+    setTimeout(poll,2500);
+  }catch(e){$('status').textContent='Error: '+e.message;$('generateBtn').disabled=false}
+}
+function renderResult(){
+  $('result').style.display='block';
+  $('layoutGrid').innerHTML=state.result.layouts.map(x=>`<article class="option"><img src="${x.url}"><div class="optionBody"><h3>Opción ${escapeHtml(x.code)} · ${escapeHtml(x.name)}</h3><p>${escapeHtml(x.strategy)}</p><div class="tags">${(x.benefits||[]).map(b=>`<span class="tag">${escapeHtml(b)}</span>`).join('')}</div><div class="validation">${x.validation?.valid===false?'⚠ Revisar geometría antes de presentar':'✓ Geometría validada / revisión recomendada'}</div></div></article>`).join('');
+  $('styleGrid').innerHTML=state.result.styles.map(x=>`<article class="option"><img src="${x.url}"><div class="optionBody"><h3>Estilo ${escapeHtml(x.code)} · ${escapeHtml(x.name)}</h3><p>${escapeHtml(x.description)}</p><div class="materials">${Object.entries(x.materials||{}).map(([k,v])=>`<div class="mat"><b>${escapeHtml(k)}</b>${escapeHtml(v)}</div>`).join('')}</div></div></article>`).join('');
+  $('result').scrollIntoView({behavior:'smooth'});
+}
+async function urlToDataUrl(url){const r=await fetch(url);const b=await r.blob();return await new Promise((res,rej)=>{const fr=new FileReader();fr.onload=()=>res(fr.result);fr.onerror=rej;fr.readAsDataURL(b)})}
+function addText(doc,text,x,y,maxWidth,size=11,bold=false){doc.setFont('helvetica',bold?'bold':'normal');doc.setFontSize(size);const lines=doc.splitTextToSize(String(text||''),maxWidth);doc.text(lines,x,y);return y+lines.length*(size*.4+1.5)}
+async function generatePdf(){
+  if(!state.result)return;const {jsPDF}=window.jspdf;const doc=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});const W=297,H=210;
+  const plan=state.plan.dataUrl,current=state.current.dataUrl;const layouts=[];for(const x of state.result.layouts)layouts.push(await urlToDataUrl(x.url));const styles=[];for(const x of state.result.styles)styles.push(await urlToDataUrl(x.url));
+  const pageTitle=(n,t)=>{doc.setTextColor(24);doc.setFont('helvetica','normal');doc.setFontSize(7);doc.text('FORMA · PROPUESTA INICIAL',14,11);doc.setFont('times','normal');doc.setFontSize(24);doc.text(t,14,26);doc.setFont('helvetica','bold');doc.setFontSize(8);doc.text(String(n).padStart(2,'0'),280,11)};
+  const addImageFit=(data,x,y,w,h)=>{const p=doc.getImageProperties(data);const s=Math.min(w/p.width,h/p.height),nw=p.width*s,nh=p.height*s;doc.addImage(data,'JPEG',x+(w-nw)/2,y+(h-nh)/2,nw,nh)};
+  // Cover
+  addImageFit(styles[0],0,0,W,H);doc.setFillColor(0,0,0);doc.setGState(new doc.GState({opacity:.33}));doc.rect(0,0,W,H,'F');doc.setGState(new doc.GState({opacity:1}));doc.setTextColor(255);doc.setFont('times','normal');doc.setFontSize(34);doc.text('Proyecto de interiorismo',18,148);doc.setFontSize(25);doc.text(state.result.project.client||'Cliente',18,163);doc.setFont('helvetica','normal');doc.setFontSize(10);doc.text('Propuesta inicial de distribución y ambiente',18,176);
+  // Brief
+  doc.addPage();pageTitle(2,'Bienvenida y briefing');doc.setTextColor(50);let y=43;y=addText(doc,'Este dossier reúne tres propuestas de distribución y tres direcciones de diseño para comparar y escoger la combinación que mejor encaje con el espacio y la forma de vivirlo.',14,y,120,11);y+=8;doc.setFont('helvetica','bold');doc.text('Objetivos',14,y);y+=7;y=addText(doc,state.result.project.goals,14,y,120,10);y+=6;doc.setFont('helvetica','bold');doc.text('Debe mantenerse',14,y);y+=7;addText(doc,state.result.project.keep,14,y,120,10);doc.setFont('times','normal');doc.setFontSize(20);doc.text('Índice',166,43);['Estado actual','Distribución A','Distribución B','Distribución C','Estilo 1','Estilo 2','Estilo 3','Tu elección'].forEach((t,i)=>{doc.setFont('helvetica','normal');doc.setFontSize(10);doc.text(`${String(i+3).padStart(2,'0')}   ${t}`,166,57+i*12)});
+  // current
+  doc.addPage();pageTitle(3,'Estado actual');addImageFit(plan,14,38,128,150);addImageFit(current,151,38,132,150);
+  // layouts
+  for(let i=0;i<3;i++){const x=state.result.layouts[i];doc.addPage();pageTitle(4+i,`Opción ${x.code} · ${x.name}`);addImageFit(layouts[i],14,38,185,145);doc.setFont('helvetica','bold');doc.setFontSize(12);doc.text('Ventajas',210,50);doc.setFont('helvetica','normal');doc.setFontSize(10);(x.benefits||[]).forEach((b,j)=>doc.text('✓ '+b,210,64+j*13));doc.setFontSize(8);doc.setTextColor(100);doc.text('La geometría fija del plano se conserva y se valida antes de presentar.',210,150,{maxWidth:67})}
+  // styles
+  for(let i=0;i<3;i++){const x=state.result.styles[i];doc.addPage();pageTitle(7+i,`Estilo ${x.code} · ${x.name}`);addImageFit(styles[i],14,38,190,145);doc.setFont('helvetica','bold');doc.setFontSize(11);doc.text('Materiales principales',214,49);let yy=61;for(const [k,v] of Object.entries(x.materials||{})){doc.setFillColor(240,235,226);doc.roundedRect(214,yy-5,67,17,3,3,'F');doc.setTextColor(35);doc.setFont('helvetica','bold');doc.setFontSize(8);doc.text(k,218,yy);doc.setFont('helvetica','normal');doc.text(doc.splitTextToSize(String(v),57),218,yy+5);yy+=22}}
+  // choice
+  doc.addPage();pageTitle(10,'Tu elección');doc.setFont('helvetica','bold');doc.setFontSize(12);doc.text('Distribución preferida',14,45);for(let i=0;i<3;i++){const x=14+i*91;addImageFit(layouts[i],x,53,82,55);doc.rect(x,114,6,6);doc.setFontSize(9);doc.text(`Opción ${state.result.layouts[i].code}`,x+9,119)}doc.setFontSize(12);doc.text('Estilo preferido',14,140);for(let i=0;i<3;i++){const x=14+i*91;addImageFit(styles[i],x,148,82,40);doc.rect(x,193,6,6);doc.setFontSize(9);doc.text(`Estilo ${state.result.styles[i].code}`,x+9,198)}
+  doc.save(`Forma_${(state.result.project.client||'Proyecto').replace(/\s+/g,'_')}.pdf`);
+}
+$('generateBtn').addEventListener('click',generate);$('pdfBtn').addEventListener('click',generatePdf);
+</script>
+</body>
+</html>

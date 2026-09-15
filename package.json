@@ -1,0 +1,11 @@
+{
+  "name": "forma-real-ai",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "@netlify/blobs": "latest",
+    "@netlify/functions": "latest",
+    "openai": "latest"
+  }
+}
